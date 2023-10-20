@@ -13,7 +13,7 @@ namespace Chuot2
         {
             Console.SetCursorPosition(col, row);
         }
-        public void PrintOutline(int row, int col, int NOC, string N, int T)
+        public void PrintOutline(int row, int col, int NOC, int L, string N, int T)
         {
             MoveCursor(0, 0);
             for (int i = 0; i < row; i++)
@@ -37,7 +37,7 @@ namespace Chuot2
             }
             Console.Write("|");
 
-            Console.WriteLine("❤️: 3/3 🧀: 0/{0} ⏰: {2} Tên: {1}", NOC, N, T / 1000);
+            Console.WriteLine("❤️: {3}/{3} 🧀: 0/{0} ⏰: {2} Tên: {1}", NOC, N, T / 1000, L);
             MoveCursor(row, col - 1);
             Console.WriteLine("|");
 
@@ -69,11 +69,8 @@ namespace Chuot2
             Thread.Sleep(200);
         }
 
-        public void inBXH (int Time, int startTime, string Name, int NumOfLvl)
+        public void inBXH (int res, string Name, int NumOfLvl)
         {
-            //Tinh diem
-            int res = ((Environment.TickCount - startTime) / 1000);
-            res = Time / 1000 - res;
             //In ra bang xep hang
             Console.Clear();
             MoveCursor(1, 15);
@@ -97,33 +94,44 @@ namespace Chuot2
         public void HDSD(ref string N, ref int e)
         {
             Console.Clear();
-            Console.Write("            Chào ");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("                        Chào ");
             N.Trim();
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write(N);
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($" nhaaaaa chào mừng bạn đến với gem của tụi mìnhhhh\n                        Bạn đọc cách chơi nha!\n");
+            Console.WriteLine($" nhaaaaa");
+            Console.WriteLine("            Chào mừng bạn đến với game của tụi mìnhhhh\n                        Bạn đọc cách chơi nha!\n");
             Thread.Sleep(500);
             //Console.Clear();
             Console.WriteLine(@"                          HƯỚNG DẪN SỬ DỤNG:
 
-        Điều khiển Chuột 🐭 bằng các phím mũi tên ⬆️⬇⬅️➡️ 
+       Điều khiển Chuột 🐭 bằng các phím mũi tên ⬆️⬇⬅️➡️ 
 
-        Ăn hết số Phô mai 🧀 ở mỗi màn trong thời gian quy định sẽ qua màn
+       Ăn hết số Phô mai 🧀 ở mỗi màn trong thời gian quy định sẽ qua màn
+       
+       Từ màn 2 trở đi sẽ xuất hiện Mèo Ma chạy lung tung trên màn hình đó!
 
-        Tránh các Bẫy 🔴 và Mèo Ma 😾 nha! Mỗi lần chạm Bẫy 🔴 hoặc Mèo Ma 😾 
-        bạn sẽ mất 1 mạng, hết số mạng bạn sẽ thua
+       Tránh các Bẫy 🔴 và Mèo Ma 😾 nha! Mỗi lần chạm Bẫy 🔴 hoặc Mèo Ma 😾 
+       bạn sẽ mất 1 mạng, hết số mạng bạn sẽ thua
 
-        Thỉnh thoảng sẽ xuất hiện một Ngôi Sao * đó! Nếu Chuột ăn được 
-        Ngôi Sao * thì sẽ được tăng tốc độ nhaaa 
+       Thỉnh thoảng sẽ xuất hiện một Ngôi Sao * đó! Nếu Chuột ăn được 
+       Ngôi Sao * thì sẽ được tăng tốc độ nha, lưu ý là Mèo Ma 😾 cũng sẽ tăng
+       tốc theo bạn đó!
 
-        Nhưng Ngôi Sao * chỉ xuất hiện trong 5s thôi, sau 5s Chuột hong ăn được 
-        thì sẽ biến mất á!
+       Nhưng Ngôi Sao * chỉ xuất hiện trong 5s thôi, sau 5s Chuột hong ăn được 
+       thì sẽ biến mất á!
 
-        Nhiêu đó hoy ák, sẵn sàng chưa thì nhấn phím cách cái nha!
-                                     (nhấn phím khác thoát gem đó)
+       Nhiêu đó hoy ák, sẵn sàng chơi thì nhấn phím cách nha! Đổi ý thì nhấn Esc
+       để thoát á!
                     ");
-            ConsoleKeyInfo userKeyInput = Console.ReadKey();
+
+            ConsoleKeyInfo userKeyInput;
+            do
+            {
+                userKeyInput = Console.ReadKey();
+            }
+            while (userKeyInput.Key != ConsoleKey.Spacebar && userKeyInput.Key != ConsoleKey.Escape);
 
             if (userKeyInput.Key == ConsoleKey.Spacebar)
             {
@@ -162,7 +170,7 @@ namespace Chuot2
             Console.Clear();
             Console.WriteLine(@"
                      Chúc bạn chơi vui hehe
-                        Gem bắt đầu sau");
+                        Game bắt đầu sau");
             Console.WriteLine("                               3");
             Thread.Sleep(1000);
             MoveCursor(3, 0);

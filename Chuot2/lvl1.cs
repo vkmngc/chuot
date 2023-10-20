@@ -9,17 +9,27 @@ namespace Chuot2
 {
     internal class lvl
     {
-        public void lv (int NumOfLvl, int row, int col, int Time, int speed, int NumOfLives, int NumOfYCheese, int NumOfTraps, string Name, ref bool pass)
+        public void lv (int a, int b, int c, int d, int e, int f, int g, int h, int j, string k, ref bool pass)
         {
 
-            end:
+        end:
+            int NumOfLvl = a;
+            int row = b;
+            int col = c;
+            int Time = d;
+            int speed = e;
+            int NumOfLives = f;
+            int NumOfYCheese = g;
+            int NumOfTraps = h;
+            int NumOfCats = j;
+            string Name = k;
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
             int CheeseEaten = 0;
             string Mouse = "🐭", Cat = "😾", Trap = "🔴", Cheese = "🧀", Star = "*";
             var P = new Print();
             P.PrintEachLv(NumOfLvl, NumOfYCheese, NumOfLives, NumOfTraps, Time, Name);
-            P.PrintOutline(row, col, NumOfYCheese, Name, Time);
+            P.PrintOutline(row, col, NumOfYCheese, NumOfLives, Name, Time);
             //Xac dinh vi tri con chuot o vi tri xuat phat la goc trai tren cung va in no ra
             Position PosOfMouse = new Position(1, 1);
             //Random Generator
@@ -31,7 +41,6 @@ namespace Chuot2
                 randomNum.Next(2, col - 2));
             MoveCursor(food.row, food.col);
             Console.Write(Cheese);
-
 
             //Tao list cac bay va in tui no ra
             List<Position> PosOfTraps = new List<Position>();
@@ -67,17 +76,15 @@ namespace Chuot2
             }
 
             //Khoi tao con meo
-            Position PosOfCat = new Position();
+            Position PosOfCat = new Position(
+                        row + 4,
+                        col +4);
             
-                do
-                {
-                    PosOfCat.row = randomNum.Next(2, row - 2);
-                    PosOfCat.col = randomNum.Next(2, col - 2);
-                }
-                while (PosOfTraps.Contains(PosOfCat) || IlluPosOfTraps.Contains(PosOfCat) || (food.row == PosOfCat.row && food.col == PosOfCat.col));
-            
-            MoveCursor(PosOfCat.row, PosOfCat.col);
-            Console.Write(Cat);
+            if (NumOfCats > 0)
+            {
+                MoveCursor(PosOfCat.row, PosOfCat.col);
+                Console.Write(Cat);
+            }
 
             //Khoi tao ngoi sao o ngoai duong bien man hinh
             Position PosOfStar = new Position(row + 2, col + 2);
@@ -171,7 +178,7 @@ namespace Chuot2
                     check = 2;
                 }
                 //Dung meo
-                else if (NewPosOfMouse.row == PosOfCat.row && (NewPosOfMouse.col == PosOfCat.col || NewPosOfMouse.col == PosOfCat.col - 1 || NewPosOfMouse.col == PosOfCat.col + 1))
+                else if (NumOfCats > 0 && NewPosOfMouse.row == PosOfCat.row && (NewPosOfMouse.col == PosOfCat.col || NewPosOfMouse.col == PosOfCat.col - 1 || NewPosOfMouse.col == PosOfCat.col + 1))
                 {
                     check = 3;
                 }
@@ -258,7 +265,8 @@ namespace Chuot2
                 //Meo di chuyen
                 int RandDirecOfCat;
                 //Kiem tra meo va huong di cua no
-                
+                if (NumOfCats > 0)
+                {
                     do
                     {
                         RandDirecOfCat = randomNum.Next(0, 4);
@@ -281,7 +289,7 @@ namespace Chuot2
                         NewPosOfCat.col = col - 3;
                     else if (NewPosOfCat.col >= col - 2)
                         NewPosOfCat.col = 2;
-                
+                }
                 //Neu chuot an duoc pho mai vang
                 if (food.row == NewPosOfMouse.row && ((food.col == NewPosOfMouse.col) || (food.col == NewPosOfMouse.col - 1) || (food.col == NewPosOfMouse.col + 1)))
                 {
@@ -293,14 +301,17 @@ namespace Chuot2
                     Console.Write(" ");
                     if (CheeseEaten == NumOfYCheese)
                     {
+                        //Tinh diem
+                        int res = ((Environment.TickCount - startTime) / 1000);
+                        res = Time / 1000 - res;
                         Console.ForegroundColor = ConsoleColor.Black;
                         Console.BackgroundColor = ConsoleColor.White;
                         MoveCursor(row / 2, col / 3);
                         Console.WriteLine("Thắng ròi giỏi wa!!!");
                         Console.ResetColor();
                         Thread.Sleep(3000);
-                        //Tinh diem
-                        P.inBXH(Time, startTime, Name, NumOfLvl);
+                        //In bang diem
+                        P.inBXH(res, Name, NumOfLvl);
                         if (NumOfLvl != 3)
                         {
                             Console.WriteLine("Nhấn cách để qua màn tiếp theo, nhấn Esc để thoát nha");
@@ -364,7 +375,10 @@ namespace Chuot2
                     {
                         //MoveCursor(PosOfStar.row, PosOfStar.col);
                         //Console.Write(" ");
-                        speed = speed - 75;
+                        if (speed > 100)
+                        {
+                            speed -= 50;
+                        }
                         StarAppeared = false;
                     }
                     //Het 5s roi ma chuot chua an ngoi sao thi ngoi sao bien mat
@@ -375,6 +389,7 @@ namespace Chuot2
                         StarAppeared = false;
                     }
                 }
+                
 
                 //Sau moi 10s se co 20% co hoi xuat hien ngoi sao, an ngoi sao thi tang toc
                 if (tem % 10 == 0 && StarAppeared == false)
@@ -407,17 +422,18 @@ namespace Chuot2
                 //Cap nhat vi tri chuot cho buoc di tiep theo
                 PosOfMouse.row = NewPosOfMouse.row;
                 PosOfMouse.col = NewPosOfMouse.col;
-                
-                //Xoa meo cu
-                MoveCursor(PosOfCat.row, PosOfCat.col);
-                Console.Write(" ");
-                //In meo moi
-                MoveCursor(NewPosOfCat.row, NewPosOfCat.col);
-                Console.Write(Cat);
-                //Cap nhat vi tri meo
-                PosOfCat.row = NewPosOfCat.row;
-                PosOfCat.col = NewPosOfCat.col;
-
+                if (NumOfCats > 0)
+                {
+                    //Xoa meo cu
+                    MoveCursor(PosOfCat.row, PosOfCat.col);
+                    Console.Write(" ");
+                    //In meo moi
+                    MoveCursor(NewPosOfCat.row, NewPosOfCat.col);
+                    Console.Write(Cat);
+                    //Cap nhat vi tri meo
+                    PosOfCat.row = NewPosOfCat.row;
+                    PosOfCat.col = NewPosOfCat.col;
+                }
                 Thread.Sleep(speed);
             }
             //Het gio
