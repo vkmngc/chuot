@@ -52,7 +52,7 @@ namespace Chuot2
                         randomNum.Next(2, row - 2),
                         randomNum.Next(2, col - 2)));
                 }
-                while (food.row == PosOfTraps[i].row && food.col == PosOfTraps[i].col);
+                while (food.row == PosOfTraps[i].row && (food.col == PosOfTraps[i].col || food.col == PosOfTraps[i].col-1 || food.col == PosOfTraps[i].col + 1));
             }
             foreach (Position trap in PosOfTraps)
             {
